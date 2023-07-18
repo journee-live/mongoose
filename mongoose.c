@@ -5805,10 +5805,12 @@ void mg_tls_init(struct mg_connection *c, const struct mg_tls_opts *opts) {
       mg_error(c, "Invalid SSL key, err %d", mg_tls_err(tls, rc));
       goto fail;
 #if OPENSSL_VERSION_NUMBER > 0x10100000L
-    // } else if ((rc = SSL_use_certificate_chain_file(tls->ssl, opts->cert)) !=
-    //            1) {
-    //   mg_error(c, "Invalid chain, err %d", mg_tls_err(tls, rc));
-    //   goto fail;
+#ifndef OPENSSL_IS_BORINGSSL
+    } else if ((rc = SSL_use_certificate_chain_file(tls->ssl, opts->cert)) !=
+               1) {
+      mg_error(c, "Invalid chain, err %d", mg_tls_err(tls, rc));
+      goto fail;
+#endif
 #endif
     } else {
       SSL_set_mode(tls->ssl, SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER);
