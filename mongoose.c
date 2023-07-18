@@ -1020,7 +1020,7 @@ typedef struct win32_dir {
   struct dirent result;
 } DIR;
 
-int gettimeofday(struct timeval *tv, void *tz) {
+static int gettimeofday(struct timeval *tv, void *tz) {
   FILETIME ft;
   unsigned __int64 tmpres = 0;
 
